@@ -1,0 +1,19 @@
+```{r}
+library(stringr)
+library(readr)
+library(zeallot)
+setwd("/Users/saumyasinghal/WebstormProjects/AdventOfCode/aoc2023")
+mystring <- str_split(read_file("day5/sample.txt"), "\n\n")[[1]]
+
+map_to_df <- function (m){
+  read.table(text = m, skip = 1, header = FALSE, col.names = c("source", "destination", "range"))
+}
+seeds <- mystring[1]
+c(s2s, s2f, f2w, w2l, l2t, t2h, h2l) %<-% lapply(mystring[-1], map_to_df)
+
+create_convert <- function(map.df){
+  function(source.num){
+
+  }
+}
+```
