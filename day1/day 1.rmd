@@ -1,0 +1,34 @@
+---
+title: "Day 1"
+output: pdf_document
+---
+
+## Part 1
+```{r}
+library(stringr)
+my_data <- read.delim("day1.txt", sep = "\n", header = FALSE)$V1
+
+sum(as.numeric(paste0(
+  str_match(my_data, "^[^\\d]*(\\d)")[,2],
+  str_match(my_data, "(\\d)[^\\d]*$")[,2])))
+```
+## Part 2
+```{r}
+english_to_numeric <- function(digits){
+  mapdf <- data.frame(old=
+                        c("zero", "one", "two", "three", "four", "five",
+                          "six", "seven", "eight", "nine", 0:9),
+                      new= c(0:9, 0:9))
+  mapdf$new[match(digits,mapdf$old)]
+}
+
+sum(as.numeric(paste0(
+english_to_numeric(
+  str_match(my_data,
+            "(zero|one|two|three|four|five|six|seven|eight|nine|\\d)\\w*")[,2]),
+english_to_numeric(
+  str_match(my_data,
+            "\\w*(zero|one|two|three|four|five|six|seven|eight|nine|\\d)")[,2]))))
+
+
+```

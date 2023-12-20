@@ -1,0 +1,60 @@
+---
+title: "Day 4"
+output: pdf_document
+---
+
+## Part 1
+
+```{r}
+library(stringr)
+setwd("/Users/saumyasinghal/PycharmProjects/aoc2023")
+lines <- read.delim("day4/day4.txt", sep="\n", header = F)[[1]]
+cards <- str_match_all(lines, "^Card\\s+\\d+:([ \\d]+)\\|([ \\d]+)$")
+```
+
+```{r}
+card_matches <- function (card){
+  ws <- str_split(card[,2], " ")
+  #print(card)
+  winning <- na.omit(as.numeric(ws[[1]]))
+  #print(winning)
+  losing <- na.omit(as.numeric(str_split(card[,3], " ")[[1]]))
+  length(intersect(winning, losing))
+}
+
+grade_card <- function(card){
+  #print(common)
+  n = card_matches(card)
+  if (n==0){
+    0
+  } else {
+    2^(n-1)
+  }
+}
+```
+```{r}
+sum(sapply(cards, grade_card))
+```
+
+## Part 2
+```{r}
+# cards_head <- head(str_match_all(lines, "^Card\\s+\\d+:([ \\d]+)\\|([ \\d]+)$"), 20)
+copies <- rep(1, length(cards))
+
+inc_copy <- function(card_num, inc_by=1){
+  copies[card_num] <<- copies[card_num] + inc_by
+}
+#print(card_matches(cards[[5]]))
+#print(copies)
+make_copies <- function (card_num){
+  #print(card_num > 201)
+  if (card_matches(cards[[card_num]]) == 0){
+  }
+  else {
+  . <- mapply(inc_copy, 1:card_matches(cards[[card_num]])+card_num, inc_by=copies[card_num])
+  }
+  #print(copies)
+}
+. <- lapply(1:length(cards), make_copies)
+print(sum(copies))
+```

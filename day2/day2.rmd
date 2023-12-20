@@ -1,0 +1,59 @@
+---
+title: "Day 2"
+output: pdf_document
+---
+## Part 1
+```{r}
+library(stringr)
+library(dplyr)
+setwd("/Users/saumyasinghal/PycharmProjects/aoc2023")
+my_data <- read.delim( "day2/day2.txt", sep = "\n", header = FALSE)$V1
+games = str_match(my_data, "^Game (\\d*):(.*)$")
+```
+```{r}
+is_possible <- function (gameInfo){
+  matches <- str_match_all(gameInfo, "(\\d*) (red|blue|green)")[[1]]
+  match_df <- data.frame(
+    balls= matches[,2],
+    color=matches[,3]
+  ) %>%
+    group_by(color) %>%
+    summarise(max_balls = max(as.numeric(balls)))
+  if (match_df$max_balls[match_df$color=="blue"] > 14){
+    FALSE
+  } else if (match_df$max_balls[match_df$color=="green"] > 13){
+    FALSE
+  } else if (match_df$max_balls[match_df$color=="red"] > 12){
+    FALSE
+  } else {
+    TRUE
+  }
+}
+#print(is_possible(" 1 red, 3 blue, 15 green; 13 green, 2 blue; 6 green; 6 green, 8 blue; 4 green, 9 blue, 1 red"))
+```
+```{r}
+mydf <- data.frame(game_id = as.numeric(games[,2]),
+                   results = sapply(games[,3],is_possible))
+possible <- filter(mydf, results==T)
+
+sum(possible$game_id)
+```
+## Part 2
+```{r}
+gamePower <- function (gameInfo){
+  matches <- str_match_all(gameInfo, "(\\d*) (red|blue|green)")[[1]]
+  match_df <- data.frame(
+    balls= matches[,2],
+    color=matches[,3]
+  ) %>%
+    group_by(color) %>%
+    summarise(max_balls = max(as.numeric(balls)))
+  prod(match_df$max_balls)
+}
+```
+
+```{r}
+mydf2 <- data.frame(game_id = as.numeric(games[,2]),
+                   powers = sapply(games[,3],gamePower))
+sum(mydf2$powers)
+```

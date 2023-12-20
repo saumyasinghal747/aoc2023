@@ -1,0 +1,100 @@
+---
+title: "Day 3"
+output: pdf_document
+---
+
+## Part 1
+```{r}
+library(stringr)
+setwd("/Users/saumyasinghal/PycharmProjects/aoc2023")
+lines <- read.delim("day3/day3.txt", sep="\n", header = F)[[1]]
+```
+```{r}
+parts <- str_locate_all(lines, "(\\d+)")
+```
+```{r}
+is_part <- function(row, col1, col2){
+  boundary <- paste0(
+    substring(lines[row-1],col1-1,col2+1),
+    substring(lines[row],col1-1,col2+1),
+    substring(lines[row+1],col1-1,col2+1)
+  )
+
+  if (str_detect(boundary, "[^\\.\\dNA]")){
+    as.numeric(substring(lines[row],col1,col2))
+  } else {
+    0
+  }
+}
+
+find_row_parts <- function(rownum,p){
+  df <- as.data.frame(p)
+  sum(mapply(is_part, row=rownum, df$start, df$end))
+}
+```
+
+```{r}
+sum(mapply(find_row_parts, 1:length(parts), parts))
+```
+
+## Part 2
+
+```{r}
+gears <- str_locate_all(lines, "\\*")
+```
+
+```{r}
+num_if_adjacent <- function(col1, col2, st){
+  if (col1 < 6 & col2 > 2){
+    as.numeric(substring(st, col1, col2))
+  } else {
+    1
+  }
+}
+
+find_gear_nums <- function(row, p){
+  df <- as.data.frame(p)
+  a<- mapply(num_if_adjacent, df$start, df$end, row)
+  if (length(a)==0){
+    1
+  } else {
+    prod(a)
+  }
+}
+
+is_gear <- function(row, col1, col2){
+  boundary <- paste(
+    substring(lines[row-1],col1-1,col2+1),
+    substring(lines[row],col1-1,col2+1),
+    substring(lines[row+1],col1-1,col2+1)
+  )
+
+  if (str_count(boundary, "\\d+")==2){
+    # now we need to extract those numbers and multiply them
+    extended.boundary <- c(
+      substring(lines[row-1],col1-3,col2+3),
+      substring(lines[row],col1-3,col2+3),
+      substring(lines[row+1],col1-3,col2+3)
+    )
+    nums <- str_locate_all(extended.boundary, "\\d+")
+    prod(mapply(find_gear_nums, extended.boundary, nums))
+  } else {
+    # otherwise we return 0
+    0
+  }
+}
+
+find_row_gears <- function(rownum,p){
+  df <- as.data.frame(p)
+  #print(df)
+  a <- mapply(is_gear, row=rownum, df$start, df$end)
+  if (length(a)==0){
+    0
+  } else {
+    sum(a)
+  }
+}
+```
+```{r}
+sum(mapply(find_row_gears, 1:length(gears), gears))
+```
