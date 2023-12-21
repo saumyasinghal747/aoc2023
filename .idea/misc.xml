@@ -42,7 +42,16 @@
         <entry key="file://$PROJECT_DIR$/day4/day4.rmd">
           <value>
             <RMarkdownRenderProfile>
+              <option name="lastOutput" value="$PROJECT_DIR$/day4/day4.pdf" />
               <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/day4" />
+            </RMarkdownRenderProfile>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/day5/day5.rmd">
+          <value>
+            <RMarkdownRenderProfile>
+              <option name="lastOutput" value="$PROJECT_DIR$/day5/day5.pdf" />
+              <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/day5" />
             </RMarkdownRenderProfile>
           </value>
         </entry>

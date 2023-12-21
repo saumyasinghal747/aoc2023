@@ -1,19 +1,45 @@
+---
+title: "Day 5"
+output: "pdf_document"
+---
 ```{r}
 library(stringr)
 library(readr)
 library(zeallot)
 setwd("/Users/saumyasinghal/WebstormProjects/AdventOfCode/aoc2023")
-mystring <- str_split(read_file("day5/sample.txt"), "\n\n")[[1]]
+chunks <- str_split(read_file("day5/day5.txt"), "\n\n")[[1]]
 
 map_to_df <- function (m){
-  read.table(text = m, skip = 1, header = FALSE, col.names = c("source", "destination", "range"))
+  read.table(text = m, skip = 1, header = FALSE,
+             col.names = c("destination", "source", "range"))
 }
-seeds <- mystring[1]
-c(s2s, s2f, f2w, w2l, l2t, t2h, h2l) %<-% lapply(mystring[-1], map_to_df)
-
+seeds <- as.numeric(strsplit(chunks[1], " ")[[1]][-1])
+c(s2s_m, s2f_m, f2w_m, w2l_m, l2t_m, t2h_m, h2l_m) %<-% lapply(chunks[-1], map_to_df)
+```
+```{r}
 create_convert <- function(map.df){
   function(source.num){
-
+    for (row_num in seq_len(nrow(map.df))) {
+      row <- map.df[row_num,]
+      if (source.num %in% (seq_len(row$range)+row$source-1)){
+        return(source.num - row$source + row$destination)
+      }
+    }
+    return(source.num)
   }
 }
+c(s2s, s2f, f2w, w2l, l2t, t2h, h2l) %<-% lapply(
+        list(s2s_m, s2f_m, f2w_m, w2l_m, l2t_m, t2h_m, h2l_m),
+        create_convert)
+
+```
+```{r, eval=F}
+
+s2l <- function (s){
+  h2l(t2h(l2t(w2l(f2w(s2f(s2s(s)))))))
+}
+
+locations <- sapply(seeds, s2l)
+
+print(min(locations))
 ```
